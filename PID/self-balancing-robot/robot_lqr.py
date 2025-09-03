@@ -76,8 +76,8 @@ def solve(initial_state, times):
 
 
 if __name__ == "__main__":
-    times = np.linspace(0, 40, 2000)
-    solution = solve([0.0, pi/12, .0, .0], times)
+    times = np.linspace(0, 5.0, 500)
+    solution = solve([0.0, pi/10, .0, .0], times)
     theta = solution[:, 1]
     phi = solution[:, 3]
     w = solution[:, 2]
@@ -126,31 +126,31 @@ if __name__ == "__main__":
     ani = animation.FuncAnimation(fig, animate, np.arange(1, len(solution)),
                                   interval=25, blit=True, init_func=init)
     
-    fig2 = plt.figure()
-    ax2 = fig2.add_subplot(111, autoscale_on=False, xlim=(0, 40), ylim=(-1, 1))
-    line2, = ax2.plot([], [], 'r-')
-    ax2.set_title('Theta vs. Time')
-    ax2.grid()
-    # ... (setup ax2) ...
-    def animate_theta(i):
-        line2.set_data(times[:i], theta[1:i+1])
-        return [line2]
+    # fig2 = plt.figure()
+    # ax2 = fig2.add_subplot(111, autoscale_on=False, xlim=(0, 40), ylim=(-1, 1))
+    # line2, = ax2.plot([], [], 'r-')
+    # ax2.set_title('Theta vs. Time')
+    # ax2.grid()
+    # # ... (setup ax2) ...
+    # def animate_theta(i):
+    #     line2.set_data(times[:i], theta[1:i+1])
+    #     return [line2]
 
-    ani2 = animation.FuncAnimation(fig2, animate_theta, np.arange(1, len(solution)),
-                                    interval=25, blit=True)
+    # ani2 = animation.FuncAnimation(fig2, animate_theta, np.arange(1, len(solution)),
+    #                                 interval=25, blit=True)
 
-    fig3 = plt.figure()
-    ax3 = fig3.add_subplot(111, autoscale_on=False, xlim=(0, 40), ylim=(-20, 60))
-    line3, = ax3.plot([], [], 'r-')
-    ax3.set_title('phi vs. Time')
-    ax3.grid()
-    # ... (setup ax2) ...
-    def animate_w(i):
-        line3.set_data(times[:i], phi[1:i+1])
-        return [line3]
+    # fig3 = plt.figure()
+    # ax3 = fig3.add_subplot(111, autoscale_on=False, xlim=(0, 40), ylim=(-20, 60))
+    # line3, = ax3.plot([], [], 'r-')
+    # ax3.set_title('phi vs. Time')
+    # ax3.grid()
+    # # ... (setup ax2) ...
+    # def animate_w(i):
+    #     line3.set_data(times[:i], phi[1:i+1])
+    #     return [line3]
 
-    ani3 = animation.FuncAnimation(fig3, animate_w, np.arange(1, len(solution)),
-                                    interval=25, blit=True)
+    # ani3 = animation.FuncAnimation(fig3, animate_w, np.arange(1, len(solution)),
+    #                                 interval=25, blit=True)
    
 
     plt.show()
