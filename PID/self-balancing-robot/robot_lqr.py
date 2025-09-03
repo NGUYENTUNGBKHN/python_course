@@ -4,7 +4,7 @@ from numpy import sin, cos, pi
 
 import matplotlib.pyplot as plt
 from matplotlib import animation
-from pid_controller import PIDController
+from lqr import get_a_b, get_lqr_gains
 
 r = 0.25        # radius of wheel
 l = 1.0         # length of pendulum
@@ -24,22 +24,15 @@ b2 = 0.01
 # - low-pass filter
 # - delay
 # - discrete measurement
-
-th_pid = PIDController(k_p=40.0, k_d=20.0, k_i=0.0, target=0.0)
-
-velocity_pid = PIDController(k_p=0.0085, k_d=0.0, k_i=0.001, target=0.0)
-
-position_pid = PIDController(k_p=0.07, k_d=0.07, k_i=0.0, target=0.0)
-
-u_history = []
-
-def limit(v, lim):
-    if v > lim:
-        return lim
-    elif v < -lim:
-        return -lim
-    else:
-        return v
+A, B = get_a_b(r, l, M, m, g)
+Q = np.array([
+    [1., .0, .0, .0],
+    [.0, 1., .0, .0],
+    [.0, .0, 100., .0],
+    [.0, .0, .0, 1.]
+])
+R = np.array([[10.]])
+K = get_lqr_gains(A, B, Q, R)
 
 
 def get_ref(t):
@@ -49,48 +42,6 @@ def get_ref(t):
         x = 0.5
         return np.array([[0, 0, x / r, 0]])
 
-
-def low_pass_filter(alpha, init):
-    y = init
-
-    def _inner(x):
-        nonlocal y
-        y = alpha * x + (1 - alpha) * y
-        return y
-
-    return _inner
-
-
-def time_delay(n):
-    buf = [0] * n
-
-    def _inner(x):
-        nonlocal buf
-        val = buf[0]
-        buf = buf[1:] + [x]
-        return val
-
-    return _inner
-
-
-def discrete_value(n):
-    y = 0
-    i = n
-
-    def _inner(x):
-        nonlocal y, i
-        i -= 1
-        if i == 0:
-            y = x
-            i = n
-        return y
-
-    return _inner
-
-
-filtered_measurement = low_pass_filter(0.9934 , 0.0)
-delayed_measurement = time_delay(25)
-discrete_measurement = discrete_value(25)
 
 def integrate_rk4(state, step, t, dt, dydx_func):
     k1 = derivate(state, step, t, dt)
@@ -102,19 +53,8 @@ def integrate_rk4(state, step, t, dt, dydx_func):
 def derivate(state, step, t, dt):
     dth, th, dphi, phi = state
 
-    velocity_target = position_pid.get_control(phi, dt)
-    velocity_pid.set_target(velocity_target)
-    # #
-    th_target = velocity_pid.get_control(dphi, dt)
-    th_pid.set_target(th_target)
-    # th_pid.set_target(velocity_target)
-
-    # measured_th = discrete_measurement(th)
-    measured_th = filtered_measurement(th)
-    # measured_th = th
-    u = -th_pid.get_control(measured_th, dt)
-    u = limit(u, 20)
-    u_history.append(u)
+    _state = np.array([[th, dth, phi, dphi]])
+    u = (-K @ (_state - get_ref(t)).T)[0, 0]
 
     s = sin(th)
     c = cos(th)
@@ -123,6 +63,7 @@ def derivate(state, step, t, dt):
     _dth = (g * s - r * _dphi * c - b1 * dth) / l
 
     return [_dth, dth, _dphi, dphi]
+
 
 def solve(initial_state, times):
     dt = times[1] - times[0]
@@ -136,7 +77,7 @@ def solve(initial_state, times):
 
 if __name__ == "__main__":
     times = np.linspace(0, 40, 2000)
-    solution = solve([0.0, pi/3, .0, .0], times)
+    solution = solve([0.0, pi/12, .0, .0], times)
     theta = solution[:, 1]
     phi = solution[:, 3]
     w = solution[:, 2]
