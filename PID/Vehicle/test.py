@@ -34,8 +34,4 @@ for i in range(sim_step):
     vehicle.update(u=[steer_input, accel_input], delta_t=delta_t, vehicle_traj=vehicle_trajectory) # update vehicle state
     vehicle_trajectory = np.vstack((vehicle_trajectory, vehicle.get_state()[:2])) # record vehicle trajectory
 
-# save animation to a file
-print("Saving animation to simulation_output.gif...")
-# Thay movie_writer="ffmpeg" bằng writer="PillowWriter"
-vehicle.save_animation(filename="simulation_output.gif", interval=delta_t*1000, movie_writer="PillowWriter")
-print("Done!")
+vehicle.show_animation(interval_ms=delta_t*1000)

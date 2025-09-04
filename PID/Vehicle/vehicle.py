@@ -248,7 +248,8 @@ class Vehicle():
         ani = ArtistAnimation(self.fig, self.frames, interval=interval_ms) # blit=True
         html = display.HTML(ani.to_jshtml())
         display.display(html)
-        plt.close()
+        plt.show()
+        # plt.close()
 
     def save_animation(self, filename: str, interval: int, movie_writer: str="ffmpeg") -> None:
         """save animation of the recorded frames (ffmpeg required)"""
