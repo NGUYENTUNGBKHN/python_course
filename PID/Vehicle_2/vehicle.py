@@ -63,12 +63,28 @@ class Vehicle():
             # apply tight layout
             self.fig.tight_layout()
 
-def update(
-        self,
-        u: np.ndarray,    
-        delta_t: float = 0.0
-    ) -> None:
-    
+    def update(
+            self,
+            u: np.ndarray,    
+            delta_t: float = 0.0,
+            append_frame: bool = True,
+            vehicle_traj: np.array = np.empty(0),
+        ) -> None:
+        # keep previous states
+        x, y, yaw, v = self.state
+
+        # prepare params
+        l = self.wheel_base
+        lr = self.l_r
+        dt = self.delta_t if delta_t == 0.0 else delta_t
+
+        # limit control inputs
+        steer = np.clip(u[0], -self.max_steer_abs, self.max_steer_abs)
+        accel = np.clip(u[1], -self.max_accel_abs, self.max_accel_abs)
+
+        # update state variables
+        
+        
 
 
 
