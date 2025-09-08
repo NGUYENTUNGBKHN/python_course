@@ -83,8 +83,9 @@ class Vehicle():
         accel = np.clip(u[1], -self.max_accel_abs, self.max_accel_abs)
 
         # update state variables
-        
-        
+        """" < CORE OF VEHICEL DYNAMICS > """
+        beta = np.arctan(l_r/1 * np.tan(steer))
+        """" < CORE OF VEHICEL DYNAMICS > """
 
 
 
