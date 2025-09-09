@@ -12,18 +12,17 @@ class pid_ctrl():
         self.Ki = Ki
         self.Kd = Kd
         self.target = target
-        self.last_state = init_state
+        self.lastvalue = init_state
         self.integral_error = 0.0
     
     def get_ctrl(self, value, dt):
-        error = value - self.target
-        derivative = - (value - self.last_state) / dt
-        integral = self.integral_error * error
+        error = self.target - value
 
-        self.last_state = value
-        self.integral_error += error
-        result = (self.Kp * error + self.Ki * integral + self.Kd * derivative)
-        return result
+        derivative = -(value - self.lastvalue) / dt
+
+        self.lastvalue = value
+        self.integral_error += error * dt
+        return self.Kp * error + self.Kd * derivative + self.Ki * self.integral_error
 
     def set_target(self, target) -> None:
         self.target = target

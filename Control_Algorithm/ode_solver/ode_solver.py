@@ -37,7 +37,6 @@ def integrate_euler(state, step, t, dt, derivative_func):
         k4 = f(xn + h/2, yn + h*k3)
 """
 def integrate_rk4(state, step, t, dt, derivative_func):
-
     k1 = derivative_func(state, step, t, dt)
     k2 = derivative_func([v + k1_ * dt/2 for v, k1_ in zip(state, k1)], step, t + dt / 2, dt)
     k3 = derivative_func([v + k2_ * dt/2 for v, k2_ in zip(state, k2)], step, t + dt / 2 , dt)
