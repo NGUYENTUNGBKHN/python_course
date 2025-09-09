@@ -34,8 +34,8 @@ class DC():
         self.k_e = k_e
         self.k_t = k_t
     
-    def get_dw(self, w, u):
-        return - w * (self.B + self.k_e)
+    def get_dw(self, w, U):
+        return -w * (self.B + self.k_e * self.k_t / self.R) / self.J + self.k_t * U / self.R / self.J
 
 
 
