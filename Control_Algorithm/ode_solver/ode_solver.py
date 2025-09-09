@@ -45,9 +45,9 @@ def integrate_rk4(state, step, t, dt, derivative_func):
 
     return [v + ( k1_ + 2*k2_ + 2*k3_ + k4_)*dt/6 for v, k1_, k2_, k3_, k4_ in zip(state, k1, k2, k3, k4)]
 
-def solve(initial_state, times, integrate_func, derivative_func)
+def solve(initial_state, times, integrate_func, derivative_func):
     dt = times[1] - times[0]
-    states = initial_state
+    states = [initial_state]
     for step, t in enumerate(times):
         states.append(integrate_func(states[-1], step, t, dt, derivative_func))
     return np.array(states)
