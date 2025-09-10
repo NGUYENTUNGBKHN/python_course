@@ -1,29 +1,31 @@
 
+
+"""
+    PID - Proportional, integral, derivation
+
+    
+"""
 class pid_ctrl():
-    def __init__(
-            self,
-            Kp,
-            Ki,
-            Kd,
-            target,
-            init_state: float = 0.0
-        ) -> None:
+    def __init__(self, Kp, Ki, Kd, target, init_state = 0.0) -> None:
         self.Kp = Kp
         self.Ki = Ki
         self.Kd = Kd
+        self.last_state = init_state
         self.target = target
-        self.lastvalue = init_state
-        self.integral_error = 0.0
-    
+        self.integrate_error = 0
+
     def get_ctrl(self, value, dt):
         error = self.target - value
 
-        derivative = -(value - self.lastvalue) / dt
+        derivative = -(value - self.last_state) /dt
+        self.integrate_error += error * dt
+        self.last_state = value
 
-        self.lastvalue = value
-        self.integral_error += error * dt
-        return self.Kp * error + self.Kd * derivative + self.Ki * self.integral_error
-
-    def set_target(self, target) -> None:
+        return (self.Kp * error + self.Ki * self.integrate_error + self.Kd * derivative)
+    
+    def set_target(self, target):
         self.target = target
+
+
+
 
