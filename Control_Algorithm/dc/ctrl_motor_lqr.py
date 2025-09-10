@@ -14,11 +14,11 @@ Q = np.array([
         [0.1, .0], # w
         [.0, 1],   # theta
     ])
-R = np.array([[0.01]])
+R = np.array([[0.0069]])
 K = get_lqr_gains(A, B, Q, R)
 
 def get_ref(t):
-    return np.array([[0.0, 1.0]])
+    return np.array([[0.0, 5.0]])
 
 def derivative(state, step, t, dt):
     w, theta = state
