@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 from ode_solver.ode_solver import solve, integrate_rk4
 from ode_solver.lqr import lqr
-from dc.dc import DC, get1_a_b, get2_a_b, get_lqr_gains
+from type_model.dc import DC, get1_a_b, get2_a_b, get_lqr_gains
 
 u_log = []
 
